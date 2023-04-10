@@ -10,7 +10,7 @@ def refine_tmap(img: NDArray[np.float64], tmap: NDArray[np.float64], mode: str, 
     sigma_s, sigma_r = kwargs.get("sigma_s", 15.), kwargs.get("sigma_r", 0.1)
     radius, epsilon = kwargs.get("radius", 30), kwargs.get("epsilon", 0.01)
 
-    if mode == "default":
+    if mode == "original":
         return bilateral_filter(soft_matting(img, tmap, lamb), sigma_s, sigma_r)
     elif mode == "soft_matting":
         return soft_matting(img, tmap, lamb)

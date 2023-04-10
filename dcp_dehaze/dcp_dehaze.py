@@ -11,6 +11,40 @@ import cv2
 
 
 def dcp_dehaze(img: NDArray[np.float64], **kwargs) -> NDArray[np.uint8]:
+    """
+    ## Parameters
+
+    img : shape = (M, N, 3)
+        Input image
+
+    **kwargs : 
+
+        patch_size : tuple[int, int], default = (15, 15)
+            Patch size while calculating dark channel.
+
+        topp : float, range = (0, 1], default = 0.001
+            Top {topp*100}% dark channel values while estimating atmospheric light.
+
+        t_mode : str, options = ["mul", "add"], default = "mul"
+            Algorithm calculating transmission map.
+
+        r_mode : str, options = ["default", "soft_matting", "bilateral", "cross_bilateral", "guided_filter"], default = "guided_filter"
+            Algorithm for transmission map refinement.
+
+        t0 : float, default = 0.1
+            Parameter t0 for reconstruction.
+
+        color_correct : bool, default = False
+            Color correction while reconstruction.
+
+        verbose : bool, default = False
+            Show transmission map and scene depth.
+
+    ## Return
+
+    Image after dehazing, shape = (M, N, 3)
+    """
+
     patch_size = kwargs.get("patch_size", (15, 15))
 
     print(f"Patch Size: {patch_size}")
