@@ -5,7 +5,7 @@ import cv2
 from .utils.utility import bgr2gray, get_topp
 
 
-def get_A(dc: NDArray[np.float64], img: NDArray[np.float64], top_p: float = 0.001) -> NDArray[np.float64]:
+def get_A(dc: NDArray[np.float64], img: NDArray[np.float64], top_p: float) -> NDArray[np.float64]:
     print(f"    top {top_p*100}%")
 
     dc256 = dc.astype(np.uint8)

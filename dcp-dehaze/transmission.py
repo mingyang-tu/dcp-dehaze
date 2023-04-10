@@ -5,7 +5,7 @@ from .dcp import get_dark_channel
 
 
 def get_t(img: NDArray[np.float64], A: NDArray[np.float64], patch_size: tuple[int, int],
-          mode: str = "mul", omega: float = 0.9, rho: float = 0.12) -> NDArray[np.float64]:
+          mode: str, omega: float, rho: float) -> NDArray[np.float64]:
     print(f"    mode = {mode}, omega = {omega}, rho = {rho}")
 
     imgdivA = np.zeros(img.shape, dtype=np.float64)

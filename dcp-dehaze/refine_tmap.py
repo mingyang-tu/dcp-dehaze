@@ -5,43 +5,47 @@ from .utils.closed_form_matting import closed_form_matting_with_prior
 from .utils.bilateral import cbf
 
 
-def refine_tmap(img: NDArray[np.float64], tmap: NDArray[np.float64], mode: str = "default") -> NDArray[np.float64]:
+def refine_tmap(img: NDArray[np.float64], tmap: NDArray[np.float64], mode: str, kwargs: dict) -> NDArray[np.float64]:
+    lamb = getattr(kwargs, "lamb", 1e-4)
+    sigma_s, sigma_r = getattr(kwargs, "sigma_s", 15.), getattr(kwargs, "sigma_r", 0.1)
+    radius, epsilon = getattr(kwargs, "radius", 30), getattr(kwargs, "epsilon", 0.01)
+
     if mode == "default":
-        return bilateral_filter(soft_matting(img, tmap))
+        return bilateral_filter(soft_matting(img, tmap, lamb), sigma_s, sigma_r)
     elif mode == "soft_matting":
-        return soft_matting(img, tmap)
+        return soft_matting(img, tmap, lamb)
     elif mode == "bilateral":
-        return bilateral_filter(tmap)
+        return bilateral_filter(tmap, sigma_s, sigma_r)
     elif mode == "cross_bilateral":
-        return cross_bilateral_filter(img, tmap)
+        return cross_bilateral_filter(img, tmap, sigma_s, sigma_r)
     elif mode == "guided_filter":
-        return color_guided_filter(img, tmap)
+        return color_guided_filter(img, tmap, radius, epsilon)
     else:
         raise ValueError("Algorithm not supported.")
 
 
-def soft_matting(img: NDArray[np.float64], tmap: NDArray[np.float64], lamb: float = 1e-4) -> NDArray[np.float64]:
+def soft_matting(img: NDArray[np.float64], tmap: NDArray[np.float64], lamb: float) -> NDArray[np.float64]:
     print(f"    soft matting, lambda = {lamb}")
 
     prior_confidence = lamb * np.ones(tmap.shape, dtype=np.float64)
     return closed_form_matting_with_prior(img, tmap, prior_confidence)
 
 
-def bilateral_filter(tmap: NDArray[np.float64], sigma_s: float = 15, sigma_r: float = 0.1) -> NDArray[np.float64]:
+def bilateral_filter(tmap: NDArray[np.float64], sigma_s: float, sigma_r: float) -> NDArray[np.float64]:
     print(f"    bilateral filter, sigma_s = {sigma_s}, sigma_r = {sigma_r}")
 
     return cv2.bilateralFilter(tmap.astype(np.float32), 0, sigma_r, sigma_s)
 
 
 def cross_bilateral_filter(img: NDArray[np.float64], tmap: NDArray[np.float64],
-                           sigma_s: float = 15, sigma_r: float = 0.1) -> NDArray[np.float64]:
+                           sigma_s: float, sigma_r: float) -> NDArray[np.float64]:
     print(f"    cross bilateral filter, sigma_s = {sigma_s}, sigma_r = {sigma_r}")
 
     return cbf(img / 255., tmap, sigma_s, sigma_r)
 
 
 def color_guided_filter(img: NDArray[np.float64], tmap: NDArray[np.float64],
-                        radius: int = 30, epsilon: float = 0.01) -> NDArray[np.float64]:
+                        radius: int, epsilon: float) -> NDArray[np.float64]:
     print(f"    guided filter, radius = {radius}, epsilon = {epsilon}")
 
     ROW, COL, _ = img.shape

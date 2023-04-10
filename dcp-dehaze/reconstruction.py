@@ -4,7 +4,7 @@ from .utils.utility import color_analysis
 
 
 def reconstruct(img: NDArray[np.float64], A: NDArray[np.float64], tmap: NDArray[np.float64],
-                t0: float = 0.1, color_correct: bool = False) -> NDArray[np.float64]:
+                t0: float, color_correct: bool) -> NDArray[np.float64]:
     print(f"    t0 = {t0}, color_correct = {color_correct}")
 
     if color_correct:
