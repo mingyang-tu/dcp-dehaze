@@ -10,7 +10,7 @@ from numpy.typing import NDArray
 import cv2
 
 
-def dcp_dehaze(img: NDArray[np.float64], **kwargs) -> NDArray[np.uint8]:
+def dcp_dehaze(input_img: NDArray[np.uint8], **kwargs) -> NDArray[np.uint8]:
     """
     ## Parameters
 
@@ -44,6 +44,8 @@ def dcp_dehaze(img: NDArray[np.float64], **kwargs) -> NDArray[np.uint8]:
 
     Image after dehazing, shape = (M, N, 3)
     """
+
+    img = input_img.astype(np.float64)
 
     patch_size = kwargs.get("patch_size", (15, 15))
 
