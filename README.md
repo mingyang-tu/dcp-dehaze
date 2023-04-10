@@ -22,7 +22,7 @@ dehaze = dcp_dehaze(input_image, **kwargs)
 
 | Input                        | Output                     |
 | :--------------------------: | :------------------------: |
-| ![](./images/haze.jpeg) | ![](./images/dehaze.jpeg) |
+| ![](./figures/haze.jpeg) | ![](./figures/dehaze.jpeg) |
 
 ## Reference
 
