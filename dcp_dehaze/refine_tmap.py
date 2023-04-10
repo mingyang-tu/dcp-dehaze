@@ -6,9 +6,9 @@ from .utils.bilateral import cbf
 
 
 def refine_tmap(img: NDArray[np.float64], tmap: NDArray[np.float64], mode: str, kwargs: dict) -> NDArray[np.float64]:
-    lamb = getattr(kwargs, "lamb", 1e-4)
-    sigma_s, sigma_r = getattr(kwargs, "sigma_s", 15.), getattr(kwargs, "sigma_r", 0.1)
-    radius, epsilon = getattr(kwargs, "radius", 30), getattr(kwargs, "epsilon", 0.01)
+    lamb = kwargs.get("lamb", 1e-4)
+    sigma_s, sigma_r = kwargs.get("sigma_s", 15.), kwargs.get("sigma_r", 0.1)
+    radius, epsilon = kwargs.get("radius", 30), kwargs.get("epsilon", 0.01)
 
     if mode == "default":
         return bilateral_filter(soft_matting(img, tmap, lamb), sigma_s, sigma_r)
