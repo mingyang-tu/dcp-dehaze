@@ -2,22 +2,21 @@ import numpy as np
 from numpy.typing import NDArray
 import cv2
 
-from .utils.utility import bgr2gray, get_topp
+from .utils.utility import bgr2gray
 
 
 def get_A(dc: NDArray[np.float64], img: NDArray[np.float64], top_p: float) -> NDArray[np.float64]:
-    print(f"    top {top_p*100}%")
+    print(f"    top {top_p}%")
 
-    dc256 = dc.astype(np.uint8)
+    threshold = np.percentile(dc, 100-top_p)
+    candidates = dc >= threshold
+
     img_gray = bgr2gray(img)
+    idxs = img_gray == np.max(img_gray[candidates])
 
-    candidate = get_topp(dc256, top_p)
-
-    # img_copy = img.copy()
-    # img_copy[dc256 >= candidate, :] = np.array([0, 0, 255])
-    # cv2.imshow(f"Top {top_p*100}%", img_copy.astype(np.uint8))
+    # img_copy = img.copy().astype(np.uint8)
+    # img_copy[candidates, :] = np.array([0, 0, 255], dtype=img.dtype)
+    # cv2.imshow(f"Top {top_p}%", img_copy)
     # cv2.waitKey()
 
-    arg_A = np.argwhere(img_gray == np.max(img_gray[dc256 >= candidate]))
-
-    return img[arg_A[0, 0], arg_A[0, 1], :]
+    return np.mean(img[idxs, :], axis=0)

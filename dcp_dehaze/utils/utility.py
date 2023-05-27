@@ -14,23 +14,6 @@ def bgr2gray(img: NDArray[np.float64]) -> NDArray[np.float64]:
     return img.dot(cvt_mat)
 
 
-def get_topp(dc: NDArray[np.uint8], top_p: float) -> int:
-    top_k = top_p * dc.shape[0] * dc.shape[1]
-
-    keys, nums = np.unique(dc, return_counts=True)
-    counter = {k: v for k, v in zip(keys, nums)}
-
-    accum = 0
-    curr = 255
-    while curr >= 0:
-        if curr in counter:
-            accum += counter[curr]
-            if accum >= top_k:
-                break
-        curr -= 1
-    return curr
-
-
 def color_analysis(img: NDArray[np.float64]) -> NDArray[np.float64]:
     avgs = np.mean(img, axis=(0, 1))
     corrected = avgs[2] - avgs

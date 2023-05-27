@@ -55,7 +55,7 @@ def dcp_dehaze(input_img: NDArray[np.uint8], **kwargs) -> NDArray[np.uint8]:
     dc = get_dark_channel(img, patch_size)
 
     print("\nEstimating atmospheric light...")
-    A = get_A(dc, img, kwargs.get("topp", 0.001))
+    A = get_A(dc, img, kwargs.get("topp", 0.1))
 
     print("\nEstimating transmission map...")
     tmap = get_t(
