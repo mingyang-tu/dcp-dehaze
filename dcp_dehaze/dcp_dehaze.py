@@ -77,7 +77,7 @@ def dcp_dehaze(input_img: NDArray[np.uint8], **kwargs) -> NDArray[np.uint8]:
     print("\nFinish!")
 
     if kwargs.get("verbose", False):
-        cv2.imshow("Transmission Map", np.clip(tmap_ref*255, 0, 255).astype(np.uint8))
+        cv2.imshow("Transmission Map", tmap_ref)
         cv2.imshow("Scene Depth", scene_depth(tmap_ref))
         cv2.waitKey()
         cv2.destroyAllWindows()
